@@ -1,0 +1,17 @@
+<!-- templates/goods_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <h1>goods list!</h1>
+    <ul>
+        {% for good in goods %}
+            <li>{{ good.product_name }} by {{ good.product_description }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
