@@ -4,41 +4,44 @@ from rest_framework.response import Response
 
 from .models import goodsTable
 from .serializers import GoodsTableSerializer
+from .service import GoodsService
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def goods_list_api(request):
-    if request.method == 'GET':
-        goods = goodsTable.objects.all()
-        serializer = GoodsTableSerializer(goods, many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        serializer = GoodsTableSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    goods_data = GoodsService.get_all_goods()
+    return Response(goods_data)
 
 
-@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@api_view(['POST'])
+def goods_create_api(request):
+    data, response_status = GoodsService.create_good(request.data)
+    return Response(data, status=response_status)
+
+
+@api_view(['DELETE'])
+def good_delete_api(request, id):
+    success = GoodsService.delete_good(id)
+    if success:
+        return Response({"message": "Good deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    else:
+        return Response({"error": "Good not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['PUT'])
+def goods_update_api(request, id):
+    updated_data, errors = GoodsService.update_good(id, request.data)
+    if updated_data is not None:
+        return Response(updated_data, status=status.HTTP_200_OK)
+    elif errors:
+        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({"error": "Good not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
 def goods_detail_api(request, id):
-    try:
-        good = goodsTable.objects.get(id=id)
-    except goodsTable.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = GoodsTableSerializer(good)
-        return Response(serializer.data)
-
-    elif request.method == 'PUT':
-        serializer = GoodsTableSerializer(good, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        good.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    good = GoodsService.get_good(id)
+    if good is not None:
+        return Response(good, status=status.HTTP_200_OK)
+    return Response({"error": "Good not found"}, status=status.HTTP_404_NOT_FOUND)
