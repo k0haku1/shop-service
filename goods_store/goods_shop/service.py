@@ -1,7 +1,6 @@
 from .models import goodsTable
 from .serializers import GoodsTableSerializer
 from rest_framework import status
-from rest_framework.response import Response
 
 
 class GoodsService:
