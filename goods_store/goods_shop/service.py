@@ -4,21 +4,20 @@ from rest_framework import status
 
 
 class GoodsService:
-    @staticmethod
-    def get_all_goods():
+    def get_all_goods(self):
         serializer = GoodsTableSerializer(goodsTable.objects.all(), many=True)
         return serializer.data
 
-    @staticmethod
-    def create_good(data):
+
+    def create_good(self, data):
         serializer = GoodsTableSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return serializer.data, status.HTTP_201_CREATED
         return serializer.errors, status.HTTP_400_BAD_REQUEST
 
-    @staticmethod
-    def get_good(id):
+
+    def get_good(self, id):
         try:
             good = goodsTable.objects.get(id=id)
             serializer = GoodsTableSerializer(good)
@@ -26,8 +25,8 @@ class GoodsService:
         except goodsTable.DoesNotExist:
             return None
 
-    @staticmethod
-    def update_good(id, data):
+
+    def update_good(self, id, data):
         try:
             good = goodsTable.objects.get(id=id)
             serializer = GoodsTableSerializer(good, data=data)
@@ -38,8 +37,8 @@ class GoodsService:
         except goodsTable.DoesNotExist:
             return None, {"error": "Good not found"}
 
-    @staticmethod
-    def delete_good(id):
+
+    def delete_good(self, id):
         try:
             good = goodsTable.objects.get(id=id)
             good.delete()
