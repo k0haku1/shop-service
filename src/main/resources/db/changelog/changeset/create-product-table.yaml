@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-product-table
+      author: Andrew
+      changes:
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: article
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: category
+                  type: VARCHAR(255)
+              - column:
+                  name: price
+                  type: DECIMAL(19, 2)
+              - column:
+                  name: quantity
+                  type: INTEGER
+              - column:
+                  name: created_at
+                  type: DATE

@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: shop-service
+  liquibase:
+    enabled : true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shop
+    username: root
+    password: ${PWD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  app:
+    price: 50
+    scheduler:
+      enabled: false
+      optimisation: false
