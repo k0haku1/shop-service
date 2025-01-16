@@ -17,4 +17,5 @@ public class ProductRepositoryJdbc {
         String sql = "UPDATE product SET price = price * ?";
         return jdbcTemplate.update(sql, BigDecimal.ONE.add(percentage.divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)));
     }
+
 }

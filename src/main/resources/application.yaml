@@ -19,3 +19,12 @@ spring:
     scheduler:
       enabled: false
       optimisation: false
+
+server:
+  port: 8080
+
+rest:
+  currency:
+    host: http://localhost:8081
+    methods:
+      exchange-rates: /api/v1/currency

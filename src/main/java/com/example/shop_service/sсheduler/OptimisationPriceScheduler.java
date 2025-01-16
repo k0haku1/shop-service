@@ -35,7 +35,7 @@ public class OptimisationPriceScheduler {
         System.out.println("0.updating...");
 
         try {
-            System.out.println("Updating prices with increment percentage: " + priceIncrementPercentage);
+            System.out.println("Updating prices with increment percentage: " + priceIncrementPercentage + " %");
 
             int updatedRows = productRepositoryJdbc.updatePrices(priceIncrementPercentage);
             String result = "Updated rows: " + updatedRows + " at " + LocalDateTime.now();

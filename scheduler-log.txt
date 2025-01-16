@@ -1,3 +1,10 @@
 Updated rows: 1000002 at 2024-12-27T17:19:16.301299700
 Updated rows: 1000002 at 2024-12-27T17:25:11.363487900
 Updated rows: 1000000 at 2024-12-29T20:52:17.417816500
+Error occurred: JDBC exception executing SQL [UPDATE product SET price = price * (1 + ? / 100)] [Запрос не вернул результатов.] [n/a] at 2025-01-08T17:45:13.453543100
+Updated rows: 1000000 at 2025-01-08T17:47:11.614535400
+Error occurred: JDBC exception executing SQL [UPDATE product SET price = price * ?] [Запрос не вернул результатов.] [n/a] at 2025-01-08T21:48:14.577999400
+Error occurred: JDBC exception executing SQL [UPDATE product SET price = price * percentage] [ОШИБКА: столбец "percentage" не существует
+  Позиция: 36] [n/a]; SQL [n/a] at 2025-01-08T21:50:00.118811700
+Updated rows: 1000000 at 2025-01-08T21:52:11.179159500
+Updated rows: 1000000 at 2025-01-13T21:18:15.909699700

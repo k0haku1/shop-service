@@ -1,5 +1,5 @@
 package com.example.shop_service.controller;
-import com.example.shop_service.controller.dto.ProductFilterDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,6 @@ import com.example.shop_service.service.dto.ProductDTO;
 import com.example.shop_service.service.ProductService;
 import com.example.shop_service.service.dto.ProductSaveDTO;
 import com.example.shop_service.service.dto.ProductUpdateDTO;
-import lombok.AllArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/products")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
@@ -30,7 +29,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable UUID id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+        return ResponseEntity.ok(productService.getProductByIdCurrency(id));
     }
 
     @PostMapping("save")
@@ -48,9 +47,5 @@ public class ProductController {
         productService.deleteProduct(id);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<Page<ProductDTO>> searchProducts (ProductFilterDto productFilterDto,  Pageable pageable) {
-       return ResponseEntity.ok(productService.searchProducts(productFilterDto, pageable));
-    }
 
 }

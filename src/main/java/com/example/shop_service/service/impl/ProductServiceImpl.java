@@ -1,24 +1,22 @@
 package com.example.shop_service.service.impl;
 
-import com.example.shop_service.controller.dto.ProductFilterDto;
 import com.example.shop_service.exception.ProductAlreadyExist;
 import com.example.shop_service.persistence.models.Product;
 import com.example.shop_service.persistence.repository.ProductRepository;
+import com.example.shop_service.provider.CurrencySessionBean;
+import com.example.shop_service.service.ExchangeRateProvider;
 import com.example.shop_service.service.ProductService;
 import com.example.shop_service.service.dto.ProductDTO;
 import com.example.shop_service.service.dto.ProductSaveDTO;
 import com.example.shop_service.service.dto.ProductUpdateDTO;
-import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 
@@ -28,33 +26,13 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ConversionService conversionService;
-
-    @Override
-    public Page<ProductDTO> searchProducts(ProductFilterDto filter, Pageable pageable) {
-        final Specification<Product> specification = (root, query, criteriaBuilder) -> {
-            final List<Predicate> predicates = new ArrayList<>();
-
-            if (filter.getName() != null) {
-                predicates.add(criteriaBuilder.like(root.get("name"), "%" + filter.getName() + "%"));
-            }
-            if (filter.getPrice() != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), filter.getPrice()));
-            }
-            if (filter.getQuantity() != null) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("quantity"), filter.getQuantity()));
-            }
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
-
-        Page<Product> productsPage = productRepository.findAll(specification, pageable);
-
-        return productsPage.map(product -> conversionService.convert(product, ProductDTO.class));
-    }
+    private final ExchangeRateProvider exchangeRateProvider;
+    private final CurrencySessionBean currencySessionBean;
 
 
     @Override
     public Page<ProductDTO> getAllProducts(Pageable pageable) {
+        String defaultCurrency = "RUB";
         return productRepository.findAll(pageable).map(product -> new ProductDTO(
                 product.getId(),
                 product.getName(),
@@ -62,6 +40,7 @@ public class ProductServiceImpl implements ProductService {
                 product.getPrice(),
                 product.getQuantity(),
                 product.getDescription(),
+                defaultCurrency,
                 product.getCategory(),
                 product.getCreatedAt())
         );
@@ -74,6 +53,24 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
         return conversionService.convert(product, ProductDTO.class);
+    }
+
+    @Override
+    public ProductDTO getProductByIdCurrency (UUID id) {
+
+        final Product product = productRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        ProductDTO productDTO = conversionService.convert(product, ProductDTO.class);
+
+        String currency = currencySessionBean.getCurrency();
+        BigDecimal convertedPrice = exchangeRateProvider.convertPriceFromCurrency(product.getPrice(), currency);
+
+        return productDTO.toBuilder()
+                .currency(currency)
+                .price(convertedPrice)
+                .build();
     }
 
     @Override

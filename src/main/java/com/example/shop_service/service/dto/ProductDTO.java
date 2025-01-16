@@ -1,8 +1,6 @@
 package com.example.shop_service.service.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,9 +8,10 @@ import java.util.UUID;
 
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
-
+@Setter
+@Getter
 public class ProductDTO {
 
     UUID id;
@@ -26,6 +25,8 @@ public class ProductDTO {
     Integer quantity;
 
     String article;
+
+    String currency;
 
     String category;
 
