@@ -42,4 +42,7 @@ public class Product {
     @Column(name = "created_at")
     private LocalDate createdAt;
 
+    @Column(name = "is_available", nullable = false)
+    private Boolean is_available;
+
 }

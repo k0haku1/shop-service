@@ -42,7 +42,8 @@ public class ProductServiceImpl implements ProductService {
                 product.getDescription(),
                 defaultCurrency,
                 product.getCategory(),
-                product.getCreatedAt())
+                product.getCreatedAt(),
+                product.getIs_available())
         );
     }
 

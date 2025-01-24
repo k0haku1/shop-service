@@ -19,6 +19,7 @@ public class ProductToProductDTO implements Converter<Product, ProductDTO> {
                 .quantity(source.getQuantity())
                 .createdAt(source.getCreatedAt())
                 .category(source.getCategory())
+                .is_available(source.getIs_available())
                 .build();
     }
 }

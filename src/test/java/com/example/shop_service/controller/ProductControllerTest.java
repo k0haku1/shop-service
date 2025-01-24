@@ -1,3 +1,5 @@
+
+/*
 package com.example.shop_service.controller;
 
 import com.example.shop_service.controller.dto.ControllerSaveDTO;
@@ -24,7 +26,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-/*
+
 @ExtendWith(MockitoExtension.class)
 public class ProductControllerTest {
 
@@ -133,3 +135,4 @@ public class ProductControllerTest {
         verify(productServiceMock, times(1)).getAllProducts(any(Pageable.class));
     }
 }
+*/

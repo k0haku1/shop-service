@@ -32,4 +32,6 @@ public class ProductDTO {
 
     LocalDate createdAt;
 
+    Boolean is_available;
+
 }

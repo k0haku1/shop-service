@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-is-available-column
+      author: Andrew
+      changes:
+        - addColumn:
+            tableName: product
+            columns:
+              - column:
+                  name : is_available
+                  type: boolean
+                  defaultValue: true
