@@ -28,3 +28,13 @@ rest:
     host: http://localhost:8081
     methods:
       exchange-rates: /api/v1/currency
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

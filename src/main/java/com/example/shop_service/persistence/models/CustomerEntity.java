@@ -1,11 +1,9 @@
 package com.example.shop_service.persistence.models;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -17,9 +15,9 @@ import java.util.UUID;
 public class CustomerEntity {
 
     @Id
-    @Column(name = "id", columnDefinition = "UUID")
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "login", nullable = false, unique = true)
     private String login;
@@ -32,4 +30,5 @@ public class CustomerEntity {
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<OrderEntity> orders;
+
 }

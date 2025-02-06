@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-order-product-table
+      author: Andrew
+      changes:
+        - createTable:
+            tableName: order_product
+            columns:
+              - column:
+                  name: order_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: decimal
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            columnNames: order_id, product_id
+            constraintName: pk_order_product
+            tableName: order_product
+        - addForeignKeyConstraint:
+            baseColumnNames: order_id
+            baseTableName: order_product
+            constraintName: fk_order
+            referencedColumnNames: id
+            referencedTableName: order
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: order_product
+            constraintName: fk_product
+            referencedColumnNames: id
+            referencedTableName: product
