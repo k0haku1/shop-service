@@ -50,4 +50,12 @@ public class WebClientConfig {
         return getWebClientForService(restConfiguration.getCurrency().getHost());
     }
 
+    public WebClient getAccountNumberClient (){
+        return getWebClientForService(restConfiguration.getAccount().getHost());
+    }
+
+    public WebClient getAccountInnClient (){
+        return getWebClientForService(restConfiguration.getCrm().getHost());
+    }
+
 }

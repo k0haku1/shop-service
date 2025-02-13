@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -44,5 +45,8 @@ public class Product {
 
     @Column(name = "is_available", nullable = false)
     private Boolean is_available;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<OrderProductEntity> orderProducts;
 
 }

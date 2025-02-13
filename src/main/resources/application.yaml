@@ -28,6 +28,14 @@ rest:
     host: http://localhost:8081
     methods:
       exchange-rates: /api/v1/currency
+  account:
+    host: http://localhost:8081
+    methods:
+      get-account-number: /api/v1/number
+  crm:
+    host: http://localhost:8081
+    methods:
+      get-account-inn: /api/v1/crm
 
 logging:
   level:

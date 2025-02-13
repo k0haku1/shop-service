@@ -18,12 +18,12 @@ public class OrderProductEntity {
     @EmbeddedId
     private OrderProductKey id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("order")
     @JoinColumn(name = "order_id")
     private OrderEntity order;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("product")
     @JoinColumn(name = "product_id")
     private Product product;

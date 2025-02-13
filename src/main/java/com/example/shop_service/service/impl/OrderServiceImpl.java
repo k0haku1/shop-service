@@ -1,5 +1,7 @@
 package com.example.shop_service.service.impl;
 
+import com.example.shop_service.controller.dto.CustomerInfo;
+import com.example.shop_service.controller.dto.OrderInfo;
 import com.example.shop_service.enumeration.OrderStatus;
 import com.example.shop_service.exception.AccessDeniedException;
 import com.example.shop_service.exception.NotAvailableOrNotEnoughAmountException;
@@ -15,6 +17,7 @@ import com.example.shop_service.persistence.projection.CompressedProductForOrder
 import com.example.shop_service.persistence.repository.OrderProductRepository;
 import com.example.shop_service.persistence.repository.OrderRepository;
 import com.example.shop_service.persistence.repository.ProductRepository;
+import com.example.shop_service.service.AccountDataProvider;
 import com.example.shop_service.service.CustomerService;
 import com.example.shop_service.service.OrderService;
 import com.example.shop_service.service.dto.OrderRequest;
@@ -31,6 +34,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +45,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderProductRepository orderProductRepository;
     private final CustomerService customerServiceImpl;
     private final ProductRepository productRepository;
+    private final AccountDataProvider accountDataProvider;
 
 
     @Transactional
@@ -188,6 +193,72 @@ public class OrderServiceImpl implements OrderService {
 
         return orderRepository.save(order).getId();
 
+    }
+
+    @Transactional
+    public Map<UUID, List<OrderInfo>> getProductInOrderInfo (List <UUID> productId){
+        List <Product> productEntityList = productRepository.findAllById(productId);
+
+        List <String> customerIds = productEntityList.stream()
+                .flatMap(product -> product.getOrderProducts().stream())
+                .map(orderProduct -> orderProduct.getOrder().getCustomer().getId().toString())
+                .distinct().toList();
+
+        CompletableFuture <Map <String, String>> accountNumberFuture = accountDataProvider.getAccountNumber(customerIds);
+        CompletableFuture <Map <String, String>> accountInnFuture = accountDataProvider.getAccountInn(customerIds);
+
+        final Map<UUID, List<OrderEntity>> productOrdersMap = productEntityList.stream()
+                .collect(Collectors.toMap(
+                        Product::getId,
+                        productEntity -> productEntity.getOrderProducts().stream()
+                                .map(OrderProductEntity::getOrder)
+                                .filter(order -> order.getStatus() == OrderStatus.CREATED || order.getStatus() == OrderStatus.CONFIRMED)
+                                .toList()
+                ));
+
+        return accountNumberFuture.thenCombine(accountInnFuture, (number, inn) ->
+                productOrdersMap.entrySet().stream()
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                e -> e.getValue().stream().map(
+                                        orderEntity -> convertToOrderInfo(
+                                                orderEntity,
+                                                number.get(orderEntity.getCustomer().getId().toString()),
+                                                inn.get(orderEntity.getCustomer().getId().toString()),
+                                                e.getKey()
+                                        )
+                                ).toList()
+                        ))
+        ).join();
+
+    }
+
+    public OrderInfo convertToOrderInfo (OrderEntity orderEntity ,
+                                         String accountNumbers,
+                                         String innData,
+                                         UUID productId) {
+        CustomerEntity customerEntity = orderEntity.getCustomer();
+
+        CustomerInfo customerInfo = CustomerInfo.builder()
+                .id(customerEntity.getId())
+                .accountNumber(accountNumbers)
+                .inn(innData)
+                .email(customerEntity.getEmail())
+                .build();
+
+        Integer quantity = orderEntity.getOrderProducts().stream()
+                .filter(orderProductEntity -> orderProductEntity.getProduct().getId().equals(productId))
+                .map(OrderProductEntity::getQuantity)
+                .findFirst()
+                .orElse(0);
+
+        return OrderInfo.builder()
+                .id(orderEntity.getId())
+                .customerInfo(customerInfo)
+                .orderStatus(orderEntity.getStatus())
+                .deliveryAddress(orderEntity.getDeliveryAddress())
+                .quantity(quantity)
+                .build();
     }
 
     private OrderEntity findById(UUID id) {

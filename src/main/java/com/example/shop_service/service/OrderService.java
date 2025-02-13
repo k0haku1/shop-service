@@ -1,9 +1,11 @@
 package com.example.shop_service.service;
 
+import com.example.shop_service.controller.dto.OrderInfo;
 import com.example.shop_service.service.dto.OrderRequest;
 import com.example.shop_service.service.dto.OrderResponse;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface OrderService {
@@ -13,6 +15,8 @@ public interface OrderService {
     UUID addProductToOrder(Long customerId, UUID orderId, List<OrderRequest.CompressedProduct> products);
 
     OrderResponse findOrderById (Long customerId, UUID orderId);
+
+    Map<UUID, List<OrderInfo>> getProductInOrderInfo (List <UUID> productId);
 
     void deleteOrder (Long customerId, UUID orderId);
 
