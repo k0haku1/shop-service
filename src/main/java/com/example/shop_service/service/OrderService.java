@@ -1,6 +1,7 @@
 package com.example.shop_service.service;
 
 import com.example.shop_service.controller.dto.OrderInfo;
+import com.example.shop_service.enumeration.OrderStatus;
 import com.example.shop_service.service.dto.OrderRequest;
 import com.example.shop_service.service.dto.OrderResponse;
 
@@ -19,5 +20,7 @@ public interface OrderService {
     Map<UUID, List<OrderInfo>> getProductInOrderInfo (List <UUID> productId);
 
     void deleteOrder (Long customerId, UUID orderId);
+
+    UUID changeOrderStatus (UUID orderId, OrderStatus orderStatus, Long customerId);
 
 }

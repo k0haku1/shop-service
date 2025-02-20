@@ -37,6 +37,10 @@ rest:
     methods:
       get-account-inn: /api/v1/crm
 
+  kafka:
+    bootstrapServers: localhost:29092
+    group-id: group1
+
 logging:
   level:
     org:

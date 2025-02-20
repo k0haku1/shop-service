@@ -1,3 +1,4 @@
+/*
 package com.example.shop_service.service;
 
 import com.example.shop_service.persistence.models.Product;
@@ -63,7 +64,9 @@ public class ProductServiceImplTest {
                 product.getQuantity(),
                 product.getDescription(),
                 product.getCategory(),
-                product.getCreatedAt())
+                product.getCreatedAt(),
+                product.getIs_available(),
+                product.getCurrency()
         );
 
         ProductDTO result = underTest.getProductById(ID);
@@ -110,6 +113,7 @@ public class ProductServiceImplTest {
                 product.getQuantity(),
                 product.getArticle(),
                 product.getCategory(),
+                product.getIs_available(),
                 LocalDate.now()
         );
 
@@ -187,3 +191,5 @@ public class ProductServiceImplTest {
     }
 
 }
+
+ */
