@@ -2,11 +2,11 @@ spring:
   application:
     name: shop-service
   liquibase:
-    enabled : true
+    enabled : false
   datasource:
     url: jdbc:postgresql://localhost:5432/shop
     username: root
-    password: ${PWD}
+    password: 123
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql
@@ -50,3 +50,14 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+cloud:
+  aws:
+    endpoint: http://localhost:9000
+    credentials:
+      access-key: minioadmin
+      secret-key: minioadmin
+    s3:
+      bucket: test-bucket
+    region:
+      static: us-east-1

@@ -1,6 +1,6 @@
 package com.example.shop_service.service.impl;
 
-import com.example.shop_service.exception.ProductAlreadyExist;
+import com.example.exceptionHandler.exception.ProductAlreadyExist;
 import com.example.shop_service.persistence.models.Product;
 import com.example.shop_service.persistence.repository.ProductRepository;
 import com.example.shop_service.provider.CurrencySessionBean;

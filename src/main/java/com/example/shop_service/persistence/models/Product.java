@@ -49,4 +49,7 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<OrderProductEntity> orderProducts;
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List <ProductImage> images;
+
 }
